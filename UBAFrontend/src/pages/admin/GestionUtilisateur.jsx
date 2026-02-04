@@ -1,9 +1,5 @@
 import { useEffect, useState } from 'react';
-import logoUba from '../../assets/logo-uba.png';
-import home from '../../assets/home.png';
-import management from '../../assets/campaign-management.png';
 import profile from '../../assets/profile.png';
-import speak from '../../assets/speaking.png';
 import Navbar from '../../components/Navbar';
 import {Input} from "../../components/forms/Input.jsx";
 import axios from "axios";
@@ -25,17 +21,24 @@ export function GestionUtilisateur() {
     const [loading, setLoading] = useState(false);
     const [users, setUsers] = useState([]);
     const [services, setServices] = useState([]);
+    // état pour la réduction de la barre latérale
+    const [navCollapsed, setNavCollapsed] = useState(false);
 
     useEffect(() => {
         fetchUsers();
         fetchServices();
     }, []);
 
+    const toggleNav = () => {
+        setNavCollapsed(prev => !prev);
+    }
+
     const fetchUsers = async () => {
         try {
             const response = await axios.get("http://localhost:4000/api/users");
             // On retire le mot de passe côté front par sécurité
-            const usersSansMdp = response.data.map(({ motDePasse, ...user }) => user);
+            // on renomme la variable pour indiquer qu'on l'ignore volontairement
+            const usersSansMdp = response.data.map(({ motDePasse: _motDePasse, ...user }) => user);
             setUsers(usersSansMdp);
         } catch (error) {
             console.error("Erreur lors de la récupération des utilisateurs :", error);
@@ -114,11 +117,11 @@ export function GestionUtilisateur() {
 
     return (
         <div className="h-screen flex bg-customRed">
-            <div className="h-screen w-96 bg-customRed flex justify-center">
-                <Navbar/>
-            </div>
-            {/* Contenu Principal */}
-            {showForm && (
+            <div className={`h-screen ${navCollapsed ? 'w-20' : 'w-96'} bg-customRed flex justify-center`}>
+                <Navbar collapsed={navCollapsed}/>
+             </div>
+             {/* Contenu Principal */}
+             {showForm && (
                 <>
                     <div className="fixed inset-0 bg-black opacity-70 z-10"></div>
                     <div className="fixed bg-white w-96 z-20 left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 p-10 rounded-lg shadow-lg">
@@ -206,12 +209,16 @@ export function GestionUtilisateur() {
             )}
             <div className="bg-white w-full">
                 <div className='items-center justify-between flex ml-10 mr-10 mt-10'>
+                    {/* Bouton pour réduire/agrandir la sidebar */}
+                    <button onClick={toggleNav} className="mr-4 p-2 rounded bg-gray-100">
+                        <span className="material-icons">{navCollapsed ? 'chevron_right' : 'chevron_left'}</span>
+                    </button>
                     <div className='justify-start'>
                         <p className='text-4xl font-roboto font-bold'>Gestion des agents</p>
                     </div>
                     <div className='flex items-center'>
                         <span className='pr-2 font-roboto font-bold'>Alghufar Sanajab</span>
-                        <img src={profile} className='h-10'/>
+                        <img src={profile} alt="Profil" className='h-10'/>
                     </div>
                 </div>
                 <div className="p-10">

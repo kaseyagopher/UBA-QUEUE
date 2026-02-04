@@ -1,4 +1,6 @@
 const db = require("../config/db");
+const bcrypt = require('bcrypt');
+const SALT_ROUNDS = 10;
 
 const User = {
     getAllUsers: (callback) => {
@@ -10,9 +12,14 @@ const User = {
     },
 
     createUser: (userData, callback) => {
-        db.query("INSERT INTO utilisateur (nom, postnom, prenom, email, role, idService, motDePasse) VALUES (?, ?, ?, ?, ?, ?, ?)",
-            [userData.nom, userData.postnom, userData.prenom, userData.email, userData.role, userData.idService, userData.motDePasse],
-            callback);
+        // Hasher le mot de passe avant insertion
+        bcrypt.hash(userData.motDePasse, SALT_ROUNDS, (err, hashedPassword) => {
+            if (err) return callback(err);
+
+            db.query("INSERT INTO utilisateur (nom, postnom, prenom, email, role, idService, motDePasse) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                [userData.nom, userData.postnom, userData.prenom, userData.email, userData.role, userData.idService, hashedPassword],
+                callback);
+        });
     },
 
     updateUser: (id, userData, callback) => {

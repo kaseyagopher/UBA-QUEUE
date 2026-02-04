@@ -17,11 +17,7 @@ import { AgentAccueil } from './pages/agent/AgentAccueil.jsx'
 const router = createBrowserRouter([
   {
     path:'/',
-    element: (
-      <div>
-        <p>Hello</p>
-      </div>
-    )
+    element: <Services/>
   },
   {
     path:'/login',
