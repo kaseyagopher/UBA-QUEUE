@@ -17,13 +17,15 @@ export function GestionService() {
     const [formData, setFormData] = useState({ nomservice: "", descriptionService: "" });
     const [services, setServices] = useState([]);
     const [loading, setLoading] = useState(false);
-    
+    const [user, setUser] = useState(null);
+
     
     
     
     
     useEffect(() => {
         fetchServices();
+        fetchUser();
     }, []);
 
     const fetchServices = async () => {
@@ -32,6 +34,15 @@ export function GestionService() {
             setServices(response.data);
         } catch (error) {
             console.error("Erreur lors de la récupération des services :", error);
+        }
+    };
+
+    const fetchUser = async () => {
+        try {
+            const response = await axios.get("http://localhost:4000/api/profile", { withCredentials: true });
+            setUser(response.data);
+        } catch (error) {
+            console.error("Erreur lors de la récupération de l'utilisateur :", error);
         }
     };
 
@@ -138,7 +149,10 @@ export function GestionService() {
                 <div className="flex items-center justify-between ml-10 mr-10 mt-10">
                     <p className="text-4xl font-roboto font-bold">Gestion des Services</p>
                     <div className="flex items-center">
-                        <span className="pr-2 font-roboto font-bold">Alghufar Sanajab</span>
+                        {/* Affichage du nom de l'utilisateur connecté */}
+                        <span className="pr-2 font-roboto font-bold">
+                            {user ? (user.nom || user.name || user.email) : "Chargement..."}
+                        </span>
                         <img src={profile} className="h-10" alt="Profile"/>
                     </div>
                 </div>

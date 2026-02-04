@@ -1,21 +1,29 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+require("bcrypt")
 const bodyParser = require("body-parser");
+const cookieParser = require('cookie-parser');
 const clientRoutes = require("./routes/clientRoutes");
 const ticketRoutes = require("./routes/ticketRoutes");
 const serviceRoutes = require("./routes/serviceRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 const port = 4000;
 
-app.use(cors());
+app.use(cors({
+    origin : "http://localhost:5173",
+    credentials: true// Remplacez par l'URL de votre frontend
+}));
 app.use(bodyParser.json());
 app.use(express.json());
+app.use(cookieParser());
 
 app.use("/api", clientRoutes);
 app.use("/api", ticketRoutes);
 app.use("/api", serviceRoutes);
+app.use("/api", userRoutes);
 
 app.get("/", (req, res) => {
     res.send("Bienvenue sur mon API Node.js avec MySQL !");

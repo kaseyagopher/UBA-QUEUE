@@ -55,6 +55,25 @@ const Navbar = () => {
             </span>
           </Link>
 
+          <button
+            onClick={async () => {
+              try {
+                await fetch("http://localhost:4000/api/logout", {
+                  method: "POST",
+                  credentials: "include"
+                });
+                window.location.href = "/login";
+              } catch (e) {
+                alert("Erreur lors de la déconnexion");
+              }
+            }}
+            className="link-style w-full text-left"
+          >
+            <span className='material-icons pr-4'>logout</span>
+            <span className="text-xl font-bold font-roboto">
+              Déconnexion
+            </span>
+          </button>
         </nav>
       </div>
     </div>

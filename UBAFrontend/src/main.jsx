@@ -12,6 +12,7 @@ import {EvaluationPerformance} from "./pages/admin/EvaluationPerformance.jsx";
 import {EvaluationService} from "./pages/admin/EvaluationService.jsx";
 import {GestionService} from "./pages/admin/GestionService.jsx";
 import { NotFound } from './pages/NotFound.jsx'
+import { AgentAccueil } from './pages/agent/AgentAccueil.jsx'
 
 const router = createBrowserRouter([
   {
@@ -31,8 +32,11 @@ const router = createBrowserRouter([
     element: <Services/>
   },
   {
-    path:'agent/gestion-clients',
+    path:'/agent/gestion-clients',
     element : <GestionClient/>
+  },{
+    path:'/agent/accueil',
+    element:<AgentAccueil />
   },
   {
     path:'/admin/gestion-utilisateurs',

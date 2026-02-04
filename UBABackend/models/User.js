@@ -23,6 +23,10 @@ const User = {
 
     deleteUser: (id, callback) => {
         db.query("DELETE FROM utilisateur WHERE id = ?", [id], callback);
+    },
+
+    getUserByEmail: (email, callback) => {
+        db.query("SELECT * FROM utilisateur WHERE email = ?", [email], callback);
     }
 };
 

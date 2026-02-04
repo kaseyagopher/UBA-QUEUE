@@ -8,7 +8,7 @@ exports.createClientWithTicket = (req, res) => {
         return res.status(400).json({ message: "Nom et prénom sont obligatoires" });
     }
 
-    // 🔹 Insérer le client
+    //  Insérer le client
     Client.create(nom, postnom, prenom, (err, result) => {
         if (err) {
             console.error("Erreur lors de l’insertion du client :", err);
@@ -18,7 +18,7 @@ exports.createClientWithTicket = (req, res) => {
         const clientId = result.insertId;
         console.log("Client créé avec ID:", clientId);
 
-        // 🔹 Récupérer le dernier numéro de ticket + 1
+        //  Récupérer le dernier numéro de ticket + 1
         Ticket.getNextTicketNumber((err, result) => {
             if (err) {
                 console.error("Erreur lors de la récupération du dernier numéro de ticket :", err);
@@ -27,7 +27,7 @@ exports.createClientWithTicket = (req, res) => {
 
             const ticketNumber = result[0].total + 1;
 
-            // 🔹 Insérer le ticket
+            //  Insérer le ticket
             Ticket.create(ticketNumber, idService, clientId, (err, result) => {
                 if (err) {
                     console.error("Erreur lors de l’insertion du ticket :", err);
