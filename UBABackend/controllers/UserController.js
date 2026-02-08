@@ -25,29 +25,49 @@ exports.getUserById = (req, res) => {
     });
 };
 
-exports.createUser = (req, res) => {
-    const newUser = req.body;
-    User.createUser(newUser, (err, result) => {
-        if (err) {
-            res.status(500).json({ error: err.message });
-        } else {
-            res.status(201).json({ message: "Utilisateur créé avec succès", userId: result.insertId });
+exports.createUser = async (req, res) => {
+    try {
+        const newUser = req.body;
+        // Si un mot de passe est fourni (création par admin), on le hash avant d'enregistrer
+        if (newUser.motDePasse) {
+            newUser.motDePasse = await bcrypt.hash(newUser.motDePasse, 10);
         }
-    });
+        User.createUser(newUser, (err, result) => {
+            if (err) {
+                res.status(500).json({ error: err.message });
+            } else {
+                res.status(201).json({ message: "Utilisateur créé avec succès", userId: result.insertId });
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 };
 
-exports.updateUser = (req, res) => {
+exports.updateUser = async (req, res) => {
     const id = req.params.id;
     const updatedUser = req.body;
-    User.updateUser(id, updatedUser, (err, result) => {
-        if (err) {
-            res.status(500).json({ error: err.message });
-        } else if (result.affectedRows === 0) {
-            res.status(404).json({ message: "Utilisateur non trouvé" });
+    try {
+        // Si un nouveau mot de passe est fourni, le hasher avant la mise à jour
+        if (updatedUser.motDePasse && typeof updatedUser.motDePasse === 'string' && updatedUser.motDePasse.trim() !== '') {
+            updatedUser.motDePasse = await bcrypt.hash(updatedUser.motDePasse, 10);
         } else {
-            res.status(200).json({ message: "Utilisateur mis à jour avec succès" });
+            // S'assurer qu'on ne transmet pas une chaîne vide comme motDePasse
+            delete updatedUser.motDePasse;
         }
-    });
+
+        User.updateUser(id, updatedUser, (err, result) => {
+            if (err) {
+                res.status(500).json({ error: err.message });
+            } else if (result.affectedRows === 0) {
+                res.status(404).json({ message: "Utilisateur non trouvé" });
+            } else {
+                res.status(200).json({ message: "Utilisateur mis à jour avec succès" });
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 };
 
 exports.deleteUser = (req, res) => {
@@ -84,8 +104,8 @@ exports.register = async (req, res) => {
 };
 
 exports.login = (req, res) => {
-    const { email, motDePasse } = req.body;
-    console.log('Tentative de connexion avec:', { email, motDePasse });
+    const { email, motDePasse, role } = req.body;
+    console.log('Tentative de connexion avec:', { email, motDePasse, role });
     if (!email || !motDePasse) {
         return res.status(400).json({ message: "Email et mot de passe requis" });
     }
@@ -100,25 +120,39 @@ exports.login = (req, res) => {
         }
         const user = users[0];
         console.log('Utilisateur trouvé:', user);
+
+        // Si le client a envoyé un role dans le formulaire, vérifier qu'il correspond au role en DB
+        if (role && user.role && role !== user.role) {
+            console.log('Role fourni ne correspond pas au role de l\'utilisateur en base:', { provided: role, actual: user.role });
+            return res.status(403).json({ message: "Rôle incorrect pour cet utilisateur" });
+        }
+
         if (!user.motDePasse || typeof user.motDePasse !== 'string' || !user.motDePasse.startsWith('$2b$') || user.motDePasse.length < 59) {
             console.log('Mot de passe stocké non valide ou non hashé !');
             return res.status(500).json({ message: "Mot de passe stocké non valide. Contactez l'administrateur." });
         }
-        const match = await bcrypt.compare(motDePasse, user.motDePasse);
-        console.log('Résultat comparaison mot de passe:', match);
-        if (!match) {
-            return res.status(401).json({ message: "Utilisateur ou mot de passe incorrect" });
+        try {
+            const match = await bcrypt.compare(motDePasse, user.motDePasse);
+            console.log('Résultat comparaison mot de passe:', match);
+            if (!match) {
+                return res.status(401).json({ message: "Utilisateur ou mot de passe incorrect" });
+            }
+        } catch (compareErr) {
+            console.error('Erreur lors de la comparaison des mots de passe:', compareErr);
+            return res.status(500).json({ error: 'Erreur serveur' });
         }
-        const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET || "secret", { expiresIn: "1d" });
+
+        // Inclure le role dans le token pour les usages côté client si nécessaire
+        const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET || "secret", { expiresIn: "1d" });
         res
             .cookie('token', token, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'dev',
+                secure: process.env.NODE_ENV === 'production',
                 sameSite: 'strict',
                 maxAge: 24 * 60 * 60 * 1000
             })
             .status(200)
-            .json({ message: "Connexion r��ussie" });
+            .json({ message: "Connexion réussie", role: user.role, id: user.id });
     });
 };
 

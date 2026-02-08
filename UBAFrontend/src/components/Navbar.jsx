@@ -2,14 +2,22 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import logoUba from '../assets/logo-uba.png'; // Assure-toi que le chemin est correct
 
-const Navbar = ({ collapsed = false }) => {
+const Navbar = ({ collapsed = false, onToggle = () => {} }) => {
   const sizeBox = 8
   return (
     <div className={`h-screen ${collapsed ? 'w-20 p-2 ' : 'w-96'} bg-customRed flex justify-center transition-all duration-300 ease-in-out overflow-hidden`}>
       <div className="justify-center">
         {/* Logo UBA */}
-        <div className="flex justify-center">
+        <div className="flex justify-center items-center relative">
           <img src={logoUba} className={`${collapsed ? 'h-8' : 'h-10'} mt-8 transition-all duration-300`} alt="Logo UBA" />
+          {/* Chevron toggle placé en haut à droite de la sidebar */}
+          <button
+            onClick={onToggle}
+            className={`absolute right-2 top-3 p-1 rounded-full bg-white/20 hover:bg-white/30 transition-opacity ${collapsed ? 'flex items-center justify-center' : ''}`}
+            aria-label="Toggle sidebar"
+          >
+            <span className="material-icons text-white">{collapsed ? 'chevron_right' : 'chevron_left'}</span>
+          </button>
         </div>
 
         {/* Navigation */}
@@ -73,6 +81,7 @@ const Navbar = ({ collapsed = false }) => {
 
 Navbar.propTypes = {
   collapsed: PropTypes.bool,
+  onToggle: PropTypes.func,
 };
 
 export default Navbar;

@@ -1,10 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import profile from '../../assets/profile.png';
-import Navbar from '../../components/Navbar';
 import {Input} from "../../components/forms/Input.jsx";
 import axios from "axios";
+import AdminContext from '../../contexts/AdminContext';
 
 export function GestionUtilisateur() {
+
+    const { setTitle } = useContext(AdminContext);
+
+    useEffect(() => {
+        setTitle('Gestion des agents');
+    }, [setTitle]);
 
     const [showForm, setShowForm] = useState(false);
     const [editMode, setEditMode] = useState(false);
@@ -21,24 +27,21 @@ export function GestionUtilisateur() {
     const [loading, setLoading] = useState(false);
     const [users, setUsers] = useState([]);
     const [services, setServices] = useState([]);
-    // état pour la réduction de la barre latérale
-    const [navCollapsed, setNavCollapsed] = useState(false);
 
     useEffect(() => {
         fetchUsers();
         fetchServices();
     }, []);
 
-    const toggleNav = () => {
-        setNavCollapsed(prev => !prev);
-    }
-
     const fetchUsers = async () => {
         try {
             const response = await axios.get("http://localhost:4000/api/users");
             // On retire le mot de passe côté front par sécurité
-            // on renomme la variable pour indiquer qu'on l'ignore volontairement
-            const usersSansMdp = response.data.map(({ motDePasse: _motDePasse, ...user }) => user);
+            const usersSansMdp = response.data.map(user => {
+                const copy = { ...user };
+                delete copy.motDePasse;
+                return copy;
+            });
             setUsers(usersSansMdp);
         } catch (error) {
             console.error("Erreur lors de la récupération des utilisateurs :", error);
@@ -116,12 +119,8 @@ export function GestionUtilisateur() {
 
 
     return (
-        <div className="h-screen flex bg-customRed">
-            <div className={`h-screen ${navCollapsed ? 'w-20' : 'w-96'} bg-customRed flex justify-center`}>
-                <Navbar collapsed={navCollapsed}/>
-             </div>
-             {/* Contenu Principal */}
-             {showForm && (
+        <>
+            {showForm && (
                 <>
                     <div className="fixed inset-0 bg-black opacity-70 z-10"></div>
                     <div className="fixed bg-white w-96 z-20 left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 p-10 rounded-lg shadow-lg">
@@ -207,65 +206,50 @@ export function GestionUtilisateur() {
                     </div>
                 </>
             )}
-            <div className="bg-white w-full">
-                <div className='items-center justify-between flex ml-10 mr-10 mt-10'>
-                    {/* Bouton pour réduire/agrandir la sidebar */}
-                    <button onClick={toggleNav} className="mr-4 p-2 rounded bg-gray-100">
-                        <span className="material-icons">{navCollapsed ? 'chevron_right' : 'chevron_left'}</span>
-                    </button>
-                    <div className='justify-start'>
-                        <p className='text-4xl font-roboto font-bold'>Gestion des agents</p>
-                    </div>
-                    <div className='flex items-center'>
-                        <span className='pr-2 font-roboto font-bold'>Alghufar Sanajab</span>
-                        <img src={profile} alt="Profil" className='h-10'/>
-                    </div>
-                </div>
-                <div className="p-10">
-                    <div className="flex justify-between items-center mb-5">
-                        <h2 className="text-2xl font-bold">Liste des utilisateurs</h2>
-                        <button onClick={() => setShowForm(true)}  className="bg-customRed text-white px-4 py-2 rounded-lg">Ajouter un utilisateur</button>
-                    </div>
 
-                    <table className="w-full border-collapse border border-gray-300">
-                        <thead>
-                        <tr className="bg-gray-100">
-                            <th className="border border-gray-300 p-2">Nom</th>
-                            <th className="border border-gray-300 p-2">Email</th>
-                            <th className="border border-gray-300 p-2">Service</th>
-                            <th className="border border-gray-300 p-2">Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {users.map((user) => {
-                            const service = services.find(s => s.id === Number(user.idService));
-                            return (
-                                <tr className="text-center" key={user.id}>
-                                    <td className="border border-gray-300 p-2">{user.nom} {user.postnom} {user.prenom}</td>
-                                    <td className="border border-gray-300 p-2">{user.email}</td>
-                                    <td className="border border-gray-300 p-2">{service ? (service.nomService || service.nomservice) : user.idService}</td>
-                                    <td className="border border-gray-300 p-2">
-                                        <button
-                                            className="bg-blue-500 text-white px-3 py-1 rounded mr-2"
-                                            onClick={() => handleEdit(user)}
-                                        >
-                                            Modifier
-                                        </button>
-                                        <button
-                                            className="bg-red-500 text-white px-3 py-1 rounded"
-                                            onClick={() => handleDelete(user.id)}
-                                        >
-                                            Supprimer
-                                        </button>
-                                    </td>
-                                </tr>
-                            );
-                        })}
-                        </tbody>
-                    </table>
+            <div>
+                <div className="flex justify-between items-center mb-5">
+                    <h2 className="text-2xl font-bold">Liste des utilisateurs</h2>
+                    <button onClick={() => setShowForm(true)}  className="bg-customRed text-white px-4 py-2 rounded-lg">Ajouter un utilisateur</button>
                 </div>
 
+                <table className="w-full border-collapse border border-gray-300">
+                    <thead>
+                    <tr className="bg-gray-100">
+                        <th className="border border-gray-300 p-2">Nom</th>
+                        <th className="border border-gray-300 p-2">Email</th>
+                        <th className="border border-gray-300 p-2">Service</th>
+                        <th className="border border-gray-300 p-2">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {users.map((user) => {
+                        const service = services.find(s => s.id === Number(user.idService));
+                        return (
+                            <tr className="text-center" key={user.id}>
+                                <td className="border border-gray-300 p-2">{user.nom} {user.postnom} {user.prenom}</td>
+                                <td className="border border-gray-300 p-2">{user.email}</td>
+                                <td className="border border-gray-300 p-2">{service ? (service.nomService || service.nomservice) : user.idService}</td>
+                                <td className="border border-gray-300 p-2">
+                                    <button
+                                        className="bg-blue-500 text-white px-3 py-1 rounded mr-2"
+                                        onClick={() => handleEdit(user)}
+                                    >
+                                        Modifier
+                                    </button>
+                                    <button
+                                        className="bg-red-500 text-white px-3 py-1 rounded"
+                                        onClick={() => handleDelete(user.id)}
+                                    >
+                                        Supprimer
+                                    </button>
+                                </td>
+                            </tr>
+                        );
+                    })}
+                    </tbody>
+                </table>
             </div>
-        </div>
+        </>
     );
 }

@@ -1,12 +1,6 @@
 import { useEffect, useState } from 'react';
-import logoUba from '../../assets/logo-uba.png';
-import home from '../../assets/home.png';
-import management from '../../assets/campaign-management.png';
 import profile from '../../assets/profile.png';
 import speak from '../../assets/speaking.png';
-import {Link} from "react-router-dom";
-import Navbar from "../../components/Navbar.jsx";
-import NavbarCommentAdmin from "../../components/NavbarCommentAdmin.jsx";
 import axios from "axios";
 
 export function GestionClient() {
@@ -44,26 +38,10 @@ export function GestionClient() {
         const utterance = new SpeechSynthesisUtterance(`Le client ${ticket.nom + ticket.postnom}, numéro ${ticket.numero}, est attendu`);
         utterance.lang = 'fr-FR';
         synth.speak(utterance);
-        /*
-        // 2️⃣ Mettre à jour le statut du ticket dans la base de données
-        fetch(`http://localhost:3000/api/tickets/appeler/${ticket.id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' }
-        })
-        .then(() => {
-            // 3️⃣ Rafraîchir la liste des tickets après l’appel
-            fetchTickets();
-        })
-        .catch(error => console.error('Erreur lors de la mise à jour du ticket:', error));*/
     };
 
     return (
-        <div className="h-screen flex bg-customRed">
-            {/* Sidebar */}
-            <div className="h-screen w-96 bg-customRed flex justify-center">
-                <NavbarCommentAdmin/>
-            </div>
-            {/* Contenu Principal */}
+        <>
             <div className="bg-white w-full">
                 <div className="flex items-center justify-between ml-10 mr-10 mt-10">
                     <p className="text-4xl font-roboto font-bold">Gestion des Services</p>
@@ -81,7 +59,7 @@ export function GestionClient() {
                     {tickets.length === 0 ? (
                         <p className='text-gray-500'>Aucun ticket en attente.</p>
                     ) : (
-                        tickets.slice(0, 1).map((ticket, idx) => (
+                        tickets.slice(0, 1).map((ticket) => (
                             <div key={ticket.id} className='flex items-center justify-center bg-customRed w-72 justify-between rounded-md p-4 mb-4'>
                                 <div>
                                     <p className='text-white font-bold font-roboto text-xl'>TICKET : {ticket.numero}</p>
@@ -89,7 +67,7 @@ export function GestionClient() {
                                 </div>
                                 <div>
                                     <div className='flex justify-center mb-1'>
-                                        <img src={speak} className='h-8'/>
+                                        <img src={speak} className='h-8' alt="Parole"/>
                                     </div>
                                     <button 
                                         className='bg-white text-customRed pl-4 pr-4 pt-1 pb-1 rounded-md font-bold' 
@@ -138,7 +116,7 @@ export function GestionClient() {
                                     defaultValue="en_cours"
                                     name="etatClient"
                                 >
-                                    <option value="" disabled selected>Choisissez l'état</option>
+                                    <option value="" disabled>Choisissez l'état</option>
                                     <option value="servi">Servi</option>
                                     <option value="non_servi">Non Servi</option>
                                     <option value="absent">Absent</option>
@@ -164,6 +142,6 @@ export function GestionClient() {
                     </div>
                 )}
             </div>
-        </div>
+        </>
     );
 }

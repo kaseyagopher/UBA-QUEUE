@@ -1,6 +1,4 @@
 const db = require("../config/db");
-const bcrypt = require('bcrypt');
-const SALT_ROUNDS = 10;
 
 const User = {
     getAllUsers: (callback) => {
@@ -12,20 +10,23 @@ const User = {
     },
 
     createUser: (userData, callback) => {
-        // Hasher le mot de passe avant insertion
-        bcrypt.hash(userData.motDePasse, SALT_ROUNDS, (err, hashedPassword) => {
-            if (err) return callback(err);
-
-            db.query("INSERT INTO utilisateur (nom, postnom, prenom, email, role, idService, motDePasse) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                [userData.nom, userData.postnom, userData.prenom, userData.email, userData.role, userData.idService, hashedPassword],
-                callback);
-        });
+        // Attente : motDePasse doit être déjà hashé côté controller
+        db.query("INSERT INTO utilisateur (nom, postnom, prenom, email, role, idService, motDePasse) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            [userData.nom, userData.postnom, userData.prenom, userData.email, userData.role, userData.idService, userData.motDePasse],
+            callback);
     },
 
     updateUser: (id, userData, callback) => {
-        db.query("UPDATE utilisateur SET nom = ?, postnom = ?, prenom = ?, email = ?, role = ?, idService = ?, motDePasse = ? WHERE id = ?",
-            [userData.nom, userData.postnom, userData.prenom, userData.email, userData.role, userData.idService, userData.motDePasse, id],
-            callback);
+        // Si motDePasse est fourni, on met à jour également le mot de passe (attendu hashé)
+        if (userData.motDePasse) {
+            db.query("UPDATE utilisateur SET nom = ?, postnom = ?, prenom = ?, email = ?, role = ?, idService = ?, motDePasse = ? WHERE id = ?",
+                [userData.nom, userData.postnom, userData.prenom, userData.email, userData.role, userData.idService, userData.motDePasse, id],
+                callback);
+        } else {
+            db.query("UPDATE utilisateur SET nom = ?, postnom = ?, prenom = ?, email = ?, role = ?, idService = ? WHERE id = ?",
+                [userData.nom, userData.postnom, userData.prenom, userData.email, userData.role, userData.idService, id],
+                callback);
+        }
     },
 
     deleteUser: (id, callback) => {

@@ -1,6 +1,6 @@
 import { Input } from "../components/forms/Input";
 import logoUba from '../assets/logo-uba.png'
-import illustration from '../assets/campaign-management.png'
+import illustration from '../assets/business-office-remote-lifestyle.jpg'
 import { Button } from "../components/forms/Button";
 import { useState } from "react";
 
@@ -9,6 +9,7 @@ export function Login(){
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const [role, setRole] = useState("client"); // Ajout de l'état role
 
     async function onSubmit(e) {
         e.preventDefault();
@@ -22,7 +23,7 @@ export function Login(){
                     "Content-Type": "application/json"
                 },
                 credentials: "include",
-                body: JSON.stringify({ email, motDePasse: password })
+                body: JSON.stringify({ email, motDePasse: password, role }) // Envoi du role
             });
             const data = await response.json();
             if (!response.ok) {
@@ -30,7 +31,22 @@ export function Login(){
                 setLoading(false);
                 return;
             }
-            // Après connexion, récupérer le profil pour la redirection selon le rôle
+
+            // Si le backend renvoie déjà le rôle, on l'utilise pour rediriger immédiatement
+            if (data && data.role) {
+                if (data.role === "admin") {
+                    window.location.href = "/admin/gestion-utilisateurs";
+                } else if (data.role === "agent") {
+                    window.location.href = "/agent/accueil";
+                } else if (data.role === "client") {
+                    window.location.href = "/client/services";
+                } else {
+                    window.location.href = "/";
+                }
+                return;
+            }
+
+            // Fallback : récupérer le profil pour la redirection selon le rôle
             const profileRes = await fetch("http://localhost:4000/api/profile", {
                 credentials: "include"
             });
@@ -52,6 +68,11 @@ export function Login(){
         }
     }
 
+    const roles = [
+        { key: 'admin', label: 'Admin' },
+        { key: 'agent', label: 'Agent' },
+    ];
+
     return (
         <div className="min-h-screen bg-white flex items-center justify-center p-4">
             <div className="w-full max-w-5xl bg-transparent rounded-lg overflow-hidden shadow-lg flex flex-col md:flex-row">
@@ -68,6 +89,22 @@ export function Login(){
                         </div>
                         <h2 className="text-center text-black font-roboto font-bold text-2xl mb-4">Login</h2>
                         <form onSubmit={onSubmit} className="bg-white p-5 rounded-lg drop-shadow-lg">
+                            {/* Role selector: liste déroulante */}
+                            <div className="mb-4">
+                                <label className="block text-sm text-gray-600 mb-2">Rôle</label>
+                                <div>
+                                    <select
+                                        value={role}
+                                        onChange={e => setRole(e.target.value)}
+                                        className="w-full px-3 py-2 border rounded-lg bg-white text-gray-700 transition-colors duration-200 focus:border-customRed focus:ring-1 focus:ring-customRed"
+                                    >
+                                        {roles.map(r => (
+                                            <option key={r.key} value={r.key}>{r.label}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+
                             <Input type={"email"} placeholder={"email"} label={"Email"} value={email} onChange={e => setEmail(e.target.value)} />
                             <Input type={"password"} placeholder={"Mot de passe"} label={"Mot de passe"} value={password} onChange={e => setPassword(e.target.value)} />
                             {error && <div className="text-red-500 text-sm mb-2">{error}</div>}

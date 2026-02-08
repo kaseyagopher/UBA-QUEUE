@@ -1,31 +1,26 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import logoUba from "../../assets/logo-uba.png";
-import home from "../../assets/home.png";
-import management from "../../assets/campaign-management.png";
-import profile from "../../assets/profile.png";
 import { Input } from "../../components/forms/Input.jsx";
-import { Link } from "react-router-dom";
 import {toast, ToastContainer} from "react-toastify"
 import "react-toastify/ReactToastify.css"
 
-import Navbar from "../../components/Navbar.jsx";
+import AdminContext from '../../contexts/AdminContext';
 
 export function GestionService() {
+
+    const { setTitle } = useContext(AdminContext);
+
+    useEffect(() => {
+        setTitle('Gestion des Services');
+    }, [setTitle]);
 
     const [showForm, setShowForm] = useState(false);
     const [formData, setFormData] = useState({ nomservice: "", descriptionService: "" });
     const [services, setServices] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [user, setUser] = useState(null);
 
-    
-    
-    
-    
     useEffect(() => {
         fetchServices();
-        fetchUser();
     }, []);
 
     const fetchServices = async () => {
@@ -34,15 +29,6 @@ export function GestionService() {
             setServices(response.data);
         } catch (error) {
             console.error("Erreur lors de la récupération des services :", error);
-        }
-    };
-
-    const fetchUser = async () => {
-        try {
-            const response = await axios.get("http://localhost:4000/api/profile", { withCredentials: true });
-            setUser(response.data);
-        } catch (error) {
-            console.error("Erreur lors de la récupération de l'utilisateur :", error);
         }
     };
 
@@ -76,8 +62,6 @@ export function GestionService() {
             setLoading(false);
         }
     };
-    
-    
 
     const supprimerService = async (id) => {
         const confirmation = window.confirm("Voulez-vous vraiment supprimer ce service ?");
@@ -92,13 +76,9 @@ export function GestionService() {
     };
 
     return (
-        <div className="h-screen flex bg-customRed">
+        <>
             <ToastContainer/>
-            {/* Sidebar */}
-            <div className="h-screen w-96 bg-customRed flex justify-center">
-                <Navbar/>
-            </div>  
-            
+
             {/* Overlay et Formulaire */}
             {showForm && (
                 <>
@@ -144,67 +124,53 @@ export function GestionService() {
                 </>
             )}
 
-            {/* Contenu Principal */}
-            <div className="bg-white w-full">
-                <div className="flex items-center justify-between ml-10 mr-10 mt-10">
-                    <p className="text-4xl font-roboto font-bold">Gestion des Services</p>
-                    <div className="flex items-center">
-                        {/* Affichage du nom de l'utilisateur connecté */}
-                        <span className="pr-2 font-roboto font-bold">
-                            {user ? (user.nom || user.name || user.email) : "Chargement..."}
-                        </span>
-                        <img src={profile} className="h-10" alt="Profile"/>
-                    </div>
+            <div>
+                <div className="flex justify-between items-center mb-5">
+                    <h2 className="text-2xl font-bold">Liste des Services</h2>
+                    <button onClick={() => setShowForm(true)} className="bg-customRed hover:bg-red-700 text-white px-4 py-2 rounded-lg items-center flex">
+                         <span className="material-icons pr-4">add_circle_outline</span>
+                         Ajouter un Service
+                    </button>
                 </div>
 
-                <div className="p-10">
-                    <div className="flex justify-between items-center mb-5">
-                        <h2 className="text-2xl font-bold">Liste des Services</h2>
-                        <button onClick={() => setShowForm(true)} className="bg-customRed hover:bg-red-700 text-white px-4 py-2 rounded-lg items-center flex">
-                             <span className="material-icons pr-4">add_circle_outline</span>
-                             Ajouter un Service
-                        </button>
-                    </div>
-
-                    {/* Tableau des Services */}
-                    <div className="h-[500px] overflow-y-auto border border-gray-300 rounded-lg">
-                        <table className="w-full border-collapse border border-gray-300">
-                            <thead className="sticky top-0">
-                                <tr className="bg-gray-100">
-                                    <th className="border border-gray-300 p-2">Noms</th>
-                                    <th className="border border-gray-300 p-2">Descriptions</th>
-                                    <th className="border border-gray-300 p-2">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {services.length > 0 ? (
-                                    services.map((service, index) => (
-                                        <tr key={service.id || `temp-${index}`} className="text-center">
-                                            <td className="border border-gray-300 p-2">{service.nomService || service.nomservice}</td>
-                                            <td className="border border-gray-300 p-2">{service.description || service.descriptionService}</td>
-                                            <td className="border border-gray-300 p-2">
-                                                <button
-                                                    onClick={() => supprimerService(service.id)}
-                                                    className="bg    hover:bg-red-700 text-white px-3 py-1 rounded justify-center flex items-center"
-                                                >
-                                                    <span className="material-icons pr-2">delete</span>
-                                                    Supprimer
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td colSpan="3" className="border border-gray-300 p-2 text-center">
-                                            Aucun service disponible
+                {/* Tableau des Services */}
+                <div className="h-[500px] overflow-y-auto border border-gray-300 rounded-lg">
+                    <table className="w-full border-collapse border border-gray-300">
+                        <thead className="sticky top-0">
+                            <tr className="bg-gray-100">
+                                <th className="border border-gray-300 p-2">Noms</th>
+                                <th className="border border-gray-300 p-2">Descriptions</th>
+                                <th className="border border-gray-300 p-2">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {services.length > 0 ? (
+                                services.map((service, index) => (
+                                    <tr key={service.id || `temp-${index}`} className="text-center">
+                                        <td className="border border-gray-300 p-2">{service.nomService || service.nomservice}</td>
+                                        <td className="border border-gray-300 p-2">{service.description || service.descriptionService}</td>
+                                        <td className="border border-gray-300 p-2">
+                                            <button
+                                                onClick={() => supprimerService(service.id)}
+                                                className="bg    hover:bg-red-700 text-white px-3 py-1 rounded justify-center flex items-center"
+                                            >
+                                                <span className="material-icons pr-2">delete</span>
+                                                Supprimer
+                                            </button>
                                         </td>
                                     </tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="3" className="border border-gray-300 p-2 text-center">
+                                        Aucun service disponible
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        </div>
+        </>
     );
 }

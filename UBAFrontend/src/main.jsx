@@ -1,7 +1,5 @@
-import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import App from './App.jsx'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { Login } from './pages/Login.jsx'
 import { Services } from './pages/client/Services.jsx'
@@ -13,6 +11,8 @@ import {EvaluationService} from "./pages/admin/EvaluationService.jsx";
 import {GestionService} from "./pages/admin/GestionService.jsx";
 import { NotFound } from './pages/NotFound.jsx'
 import { AgentAccueil } from './pages/agent/AgentAccueil.jsx'
+import AdminShell from './components/AdminShell';
+import AgentShell from './components/AgentShell.jsx';
 
 const router = createBrowserRouter([
   {
@@ -27,32 +27,26 @@ const router = createBrowserRouter([
     path :'/client-portail',
     element: <Services/>
   },
+  // Routes agent regroupées sous un shell parent (layout partagé)
   {
-    path:'/agent/gestion-clients',
-    element : <GestionClient/>
-  },{
-    path:'/agent/accueil',
-    element:<AgentAccueil />
+    path: '/agent',
+    element: <AgentShell />,
+    children: [
+      { path: 'accueil', element: <AgentAccueil /> },
+      { path: 'gestion-clients', element: <GestionClient /> },
+    ]
   },
+  // Route parent admin : admin shell garde le même layout entre enfants
   {
-    path:'/admin/gestion-utilisateurs',
-    element : <GestionUtilisateur/>
-  },
-  {
-    path:'/admin/gestion-guichet',
-    element:<GestionGuichets/>
-  },
-  {
-    path:'/admin/evaluation-performance',
-    element : <EvaluationPerformance/>
-  },
-  {
-    path:'/admin/evaluation-service',
-    element:<EvaluationService/>
-  },
-  {
-    path:'/admin/gestion-service',
-    element : <GestionService/>
+    path: '/admin',
+    element: <AdminShell />,
+    children: [
+      { path: 'gestion-utilisateurs', element: <GestionUtilisateur /> },
+      { path: 'gestion-guichet', element: <GestionGuichets /> },
+      { path: 'evaluation-performance', element: <EvaluationPerformance /> },
+      { path: 'evaluation-service', element: <EvaluationService /> },
+      { path: 'gestion-service', element: <GestionService /> },
+    ]
   },
   {
     path:"*",
