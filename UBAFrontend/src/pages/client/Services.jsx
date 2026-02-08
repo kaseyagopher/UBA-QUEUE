@@ -95,6 +95,9 @@ export function Services(){
                     </div>
                 ) : (
                     <form action="" onSubmit={handleSubmit} method="post" className='p-10'>
+                        <div className="text-xl font-bold ">
+                            Veuillez renseignez vos informations
+                        </div>
                     <Input
                         type="text"
                         name="nom"
