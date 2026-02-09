@@ -46,24 +46,53 @@ exports.createUser = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
     const id = req.params.id;
-    const updatedUser = req.body;
-    try {
-        // Si un nouveau mot de passe est fourni, le hasher avant la mise à jour
-        if (updatedUser.motDePasse && typeof updatedUser.motDePasse === 'string' && updatedUser.motDePasse.trim() !== '') {
-            updatedUser.motDePasse = await bcrypt.hash(updatedUser.motDePasse, 10);
-        } else {
-            // S'assurer qu'on ne transmet pas une chaîne vide comme motDePasse
-            delete updatedUser.motDePasse;
-        }
+    const updatedUserBody = req.body;
 
-        User.updateUser(id, updatedUser, (err, result) => {
+    try {
+        // Récupérer l'utilisateur existant
+        User.getUserById(id, async (err, result) => {
             if (err) {
-                res.status(500).json({ error: err.message });
-            } else if (result.affectedRows === 0) {
-                res.status(404).json({ message: "Utilisateur non trouvé" });
-            } else {
-                res.status(200).json({ message: "Utilisateur mis à jour avec succès" });
+                return res.status(500).json({ error: err.message });
             }
+            if (!result || result.length === 0) {
+                return res.status(404).json({ message: "Utilisateur non trouvé" });
+            }
+
+            const existing = result[0];
+
+            // Fusionner : garder les valeurs existantes si non fournies dans le body
+            const merged = {
+                nom: updatedUserBody.nom !== undefined ? updatedUserBody.nom : existing.nom,
+                postnom: updatedUserBody.postnom !== undefined ? updatedUserBody.postnom : existing.postnom,
+                prenom: updatedUserBody.prenom !== undefined ? updatedUserBody.prenom : existing.prenom,
+                email: updatedUserBody.email !== undefined ? updatedUserBody.email : existing.email,
+                role: updatedUserBody.role !== undefined ? updatedUserBody.role : existing.role,
+                idService: updatedUserBody.idService !== undefined ? updatedUserBody.idService : existing.idService,
+                // motDePasse géré plus bas
+            };
+
+            // Si un nouveau mot de passe est fourni, le hasher
+            if (updatedUserBody.motDePasse && typeof updatedUserBody.motDePasse === 'string' && updatedUserBody.motDePasse.trim() !== '') {
+                try {
+                    merged.motDePasse = await bcrypt.hash(updatedUserBody.motDePasse, 10);
+                } catch (hashErr) {
+                    console.error('Erreur hashing motDePasse:', hashErr);
+                    return res.status(500).json({ error: 'Erreur serveur' });
+                }
+            }
+
+            // Appeler le modèle pour mettre à jour
+            console.log('Mise à jour utilisateur id=', id, 'avec payload:', merged);
+            User.updateUser(id, merged, (updateErr, updateResult) => {
+                console.log('Résultat updateUser callback => err:', updateErr, 'result:', updateResult);
+                if (updateErr) {
+                    return res.status(500).json({ error: updateErr.message });
+                }
+                if (updateResult.affectedRows === 0) {
+                    return res.status(404).json({ message: "Utilisateur non trouvé" });
+                }
+                return res.status(200).json({ message: "Utilisateur mis à jour avec succès" });
+            });
         });
     } catch (error) {
         res.status(500).json({ error: error.message });
