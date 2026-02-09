@@ -8,6 +8,9 @@ const clientRoutes = require("./routes/clientRoutes");
 const ticketRoutes = require("./routes/ticketRoutes");
 const serviceRoutes = require("./routes/serviceRoutes");
 const userRoutes = require("./routes/userRoutes");
+const fileRoutes = require("./routes/FileRoutes");
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./swagger');
 
 const app = express();
 const port = 4000;
@@ -20,10 +23,14 @@ app.use(bodyParser.json());
 app.use(express.json());
 app.use(cookieParser());
 
+// Monte la documentation Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 app.use("/api", clientRoutes);
 app.use("/api", ticketRoutes);
 app.use("/api", serviceRoutes);
 app.use("/api", userRoutes);
+app.use("/api", fileRoutes);
 
 app.get("/", (req, res) => {
     res.send("Bienvenue sur mon API Node.js avec MySQL !");

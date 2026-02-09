@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model service {
+  id          Int      @id @default(autoincrement())
+  nomService  String   @db.VarChar(50)
+  description String?
+  utilisateurs  utilisateur[]
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  tickets     ticket[]
+}
+
+model client {
+  id         Int      @id @default(autoincrement())
+  nom        String   @db.VarChar(100)
+  postnom    String   @db.VarChar(100)
+  prenom     String   @db.VarChar(100)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  tickets    ticket[]
+}
+
+model utilisateur {
+  id         Int      @id @default(autoincrement())
+  nom        String   @db.VarChar(100)
+  postnom    String   @db.VarChar(100)
+  prenom     String   @db.VarChar(100)
+  email      String   @db.VarChar(255) @unique
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  role       String   @db.VarChar(50)
+  statut     String   @db.VarChar(50)
+  tickets    ticket[]
+  motDePasse   String   @db.VarChar(255)
+
+  idService  Int?
+  service    service? @relation(fields: [idService], references: [id])
+}
+
+model ticket {
+  id            Int          @id @default(autoincrement())
+  numero        Int
+  statut        String       @db.VarChar(50)
+  heureArrivee  DateTime
+  heureServi    DateTime?
+  idService     Int?
+  idClient      Int?
+  idUtilisateur Int?
+  created_at    DateTime     @default(now())
+  updated_at    DateTime     @updatedAt
+  client        client?      @relation(fields: [idClient], references: [id])
+  service       service?     @relation(fields: [idService], references: [id])
+  utilisateur   utilisateur? @relation(fields: [idUtilisateur], references: [id])
+
+  @@index([idClient], map: "ticket_idClient_fkey")
+  @@index([idService], map: "ticket_idService_fkey")
+  @@index([idUtilisateur], map: "ticket_idUtilisateur_fkey")
+}
