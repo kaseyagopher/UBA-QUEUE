@@ -116,7 +116,7 @@ exports.register = async (req, res) => {
     console.log('Tentative d’inscription avec les données:', req.body);
     try {
         const { nom, postnom, prenom, email, role, idService, motDePasse } = req.body;
-        if (!nom || !postnom || !prenom || !email || !role || !idService || !motDePasse) {
+        if (!nom || !postnom || !prenom || !email || !role || !motDePasse) {
             return res.status(400).json({ message: "Tous les champs sont requis : nom, postnom, prenom, email, role, idService, motDePasse" });
         }
         const hashedPassword = await bcrypt.hash(motDePasse, 10);

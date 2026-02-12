@@ -12,10 +12,34 @@ model service {
   id          Int      @id @default(autoincrement())
   nomService  String   @db.VarChar(50)
   description String?
-  utilisateurs  utilisateur[]
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
-  tickets     ticket[]
+
+  utilisateurs utilisateur[]
+  tickets      ticket[]
+  guichets     guichet[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model guichet {
+  id        Int    @id @default(autoincrement())
+  lettre    String @db.Char(1)
+  type      String @db.VarChar(50) @default("standard")
+
+  idService    Int
+  service      service       @relation(fields: [idService], references: [id])
+
+  idUtilisateur Int?
+  utilisateur   utilisateur? @relation(fields: [idUtilisateur], references: [id])
+
+  tickets ticket[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@unique([lettre, idService])
+  @@index([idService])
+  @@index([idUtilisateur])
 }
 
 model client {
@@ -23,9 +47,11 @@ model client {
   nom        String   @db.VarChar(100)
   postnom    String   @db.VarChar(100)
   prenom     String   @db.VarChar(100)
+
+  tickets ticket[]
+
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  tickets    ticket[]
 }
 
 model utilisateur {
@@ -33,35 +59,50 @@ model utilisateur {
   nom        String   @db.VarChar(100)
   postnom    String   @db.VarChar(100)
   prenom     String   @db.VarChar(100)
-  email      String   @db.VarChar(255) @unique
+  email      String   @unique @db.VarChar(255)
+  motDePasse String   @db.VarChar(255)
+  role       String   @db.VarChar(50)
+  statut     String   @db.VarChar(50)
+
+  idService Int?
+  service   service? @relation(fields: [idService], references: [id])
+
+  // Relation inverse obligatoire pour Prisma
+  guichets guichet[]
+
+  tickets ticket[]
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  role       String   @db.VarChar(50)
-  statut     String   @db.VarChar(50)
-  tickets    ticket[]
-  motDePasse   String   @db.VarChar(255)
-
-  idService  Int?
-  service    service? @relation(fields: [idService], references: [id])
 }
 
 model ticket {
-  id            Int          @id @default(autoincrement())
-  numero        Int
-  statut        String       @db.VarChar(50)
-  heureArrivee  DateTime
-  heureServi    DateTime?
+  id           Int      @id @default(autoincrement())
+  numero       Int
+  statut       String   @db.VarChar(50)
+  heureArrivee DateTime
+  heureAppel   DateTime?
+  heureServi   DateTime?
+  tempsAttente Int?
+  tempsService Int?
+
   idService     Int?
   idClient      Int?
   idUtilisateur Int?
-  created_at    DateTime     @default(now())
-  updated_at    DateTime     @updatedAt
-  client        client?      @relation(fields: [idClient], references: [id])
-  service       service?     @relation(fields: [idService], references: [id])
-  utilisateur   utilisateur? @relation(fields: [idUtilisateur], references: [id])
+  idGuichet     Int?
 
-  @@index([idClient], map: "ticket_idClient_fkey")
-  @@index([idService], map: "ticket_idService_fkey")
-  @@index([idUtilisateur], map: "ticket_idUtilisateur_fkey")
+  client      client?      @relation(fields: [idClient], references: [id])
+  service     service?     @relation(fields: [idService], references: [id])
+  utilisateur utilisateur? @relation(fields: [idUtilisateur], references: [id])
+  guichet     guichet?     @relation(fields: [idGuichet], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@index([idClient])
+  @@index([idService])
+  @@index([idUtilisateur])
+  @@index([idGuichet])
+  @@index([statut])
+  @@index([created_at])
 }

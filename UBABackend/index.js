@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 const clientRoutes = require("./routes/clientRoutes");
 const ticketRoutes = require("./routes/ticketRoutes");
 const serviceRoutes = require("./routes/serviceRoutes");
+const guichetRoutes = require('./routes/guichetRoutes');
 const userRoutes = require("./routes/userRoutes");
 const fileRoutes = require("./routes/FileRoutes");
 const swaggerUi = require('swagger-ui-express');
@@ -31,6 +32,7 @@ app.use("/api", ticketRoutes);
 app.use("/api", serviceRoutes);
 app.use("/api", userRoutes);
 app.use("/api", fileRoutes);
+app.use("/api", guichetRoutes);
 
 app.get("/", (req, res) => {
     res.send("Bienvenue sur mon API Node.js avec MySQL !");
