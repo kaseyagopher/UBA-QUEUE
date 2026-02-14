@@ -81,6 +81,24 @@ const Guichet = {
         });
     },
 
+    // Récupérer les guichets par agent (ID utilisateur)
+    getByAgentId: (agentId, callback) => {
+        const sql = `
+        SELECT g.*,
+               s.nomService as serviceNom,
+               CONCAT(u.nom, ' ', u.prenom) as agentNom
+        FROM guichet g
+                 LEFT JOIN service s ON s.id = g.idService
+                 LEFT JOIN utilisateur u ON u.id = g.idUtilisateur
+        WHERE g.idUtilisateur = ?
+        ORDER BY g.lettre ASC
+    `;
+        db.query(sql, [agentId], (err, results) => {
+            if (err) return callback(err, null);
+            callback(null, results);
+        });
+    },
+
     // Mettre à jour un guichet
     update: (id, data, callback) => {
         const { lettre, idService, idUtilisateur, type } = data;

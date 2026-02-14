@@ -133,6 +133,30 @@ exports.getGuichetsByService = (req, res) => {
     });
 };
 
+// Récupérer les guichets par agent
+exports.getGuichetsByAgent = (req, res) => {
+    const { agentId } = req.params;
+
+    if (!agentId || isNaN(agentId)) {
+        return res.status(400).json({
+            success: false,
+            message: "ID d'agent invalide"
+        });
+    }
+
+    Guichet.getByAgentId(parseInt(agentId), (err, guichets) => {
+        if (err) {
+            console.error(`❌ Erreur récupération guichets de l'agent ${agentId}:`, err);
+            return res.status(500).json({
+                success: false,
+                message: "Erreur serveur"
+            });
+        }
+
+        res.status(200).json(guichets);
+    });
+};
+
 // Récupérer les lettres disponibles pour un service
 exports.getLettresDisponibles = (req, res) => {
     const { serviceId } = req.params;

@@ -4,6 +4,7 @@ const {
     getAllGuichets,
     getGuichetById,
     getGuichetsByService,
+    getGuichetsByAgent,
     getLettresDisponibles,
     updateGuichet,
     deleteGuichet,
@@ -29,5 +30,9 @@ router.delete("/guichets/:id", deleteGuichet);
 
 // PATCH
 router.patch("/guichets/:id/assigner-agent", assignerAgent);
+
+// GET /api/guichets/agent/:agentId - Récupérer les guichets d'un agent
+router.get("/guichets/agent/:agentId", getGuichetsByAgent);
+
 
 module.exports = router;
