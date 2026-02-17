@@ -1,16 +1,16 @@
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import logoUba from '../assets/logo-uba.png'; // Assure-toi que le chemin est correct
+import logoUba from '../assets/logo-uba.png';
 
-const Navbar = ({ collapsed = false, onToggle = () => {} }) => {
-  const sizeBox = 8
+const Navbar = ({ collapsed = false, onToggle = () => { } }) => {
+  const sizeBox = 6;
+
   return (
     <div className={`h-screen ${collapsed ? 'w-20 p-2 ' : 'w-96'} bg-customRed flex justify-center transition-all duration-300 ease-in-out overflow-hidden`}>
       <div className="justify-center">
         {/* Logo UBA */}
         <div className="flex justify-center items-center relative">
           <img src={logoUba} className={`${collapsed ? 'h-8' : 'h-10'} mt-8 transition-all duration-300`} alt="Logo UBA" />
-          {/* Chevron toggle placé en haut à droite de la sidebar */}
           <button
             onClick={onToggle}
             className={`absolute right-2 top-3 p-1 rounded-full bg-white/20 hover:bg-white/30 transition-opacity ${collapsed ? 'flex items-center justify-center' : ''}`}
@@ -21,35 +21,44 @@ const Navbar = ({ collapsed = false, onToggle = () => {} }) => {
         </div>
 
         {/* Navigation */}
-        <nav>
+        <nav className="mt-8">
           <Link
-            to="/"
-            className={`link-style flex items-center ${collapsed ? 'justify-center' : ''}`}
+            to="/admin/dashboard"
+            className={`link-style flex items-center ${collapsed ? 'justify-center' : ''} hover:bg-white/10 transition-colors`}
           >
             <span className={`material-icons ${collapsed ? `w-${sizeBox} h-${sizeBox} flex items-center justify-center` : 'pr-4'}`}>dashboard</span>
-            {!collapsed && <span className="text-xl font-bold font-roboto">Accueil</span>}
+            {!collapsed && <span className="text-xl font-bold font-roboto">Tableau de bord</span>}
+          </Link>
+
+          <Link
+            to="/admin/gestion-guichet"
+            className={`link-style flex items-center ${collapsed ? 'justify-center px-2' : 'px-6'}`}
+          >
+            <span className={`material-icons ${collapsed ? `w-${sizeBox} h-${sizeBox} flex items-center justify-center` : 'pr-4'}`}>
+              countertops
+            </span>
+            {!collapsed && <span className="text-lg font-bold font-roboto">Guichets</span>}
           </Link>
 
           <Link
             to="/admin/gestion-service"
-            className={`link-style flex items-center ${collapsed ? 'justify-center' : ''}`}
+            className={`link-style flex items-center ${collapsed ? 'justify-center' : ''} hover:bg-white/10 transition-colors`}
           >
             <span className={`material-icons ${collapsed ? `w-${sizeBox} h-${sizeBox} flex items-center justify-center` : 'pr-4'}`}>people</span>
-            {!collapsed && <span className="text-xl font-bold  font-roboto">Gestion des services</span>}
+            {!collapsed && <span className="text-xl font-bold font-roboto">Gestion des services</span>}
           </Link>
 
           <Link
             to="/admin/gestion-utilisateurs"
-            className={`link-style flex items-center ${collapsed ? 'justify-center' : ''}`}
+            className={`link-style flex items-center ${collapsed ? 'justify-center' : ''} hover:bg-white/10 transition-colors`}
           >
             <span className={`material-icons ${collapsed ? `w-${sizeBox} h-${sizeBox} flex items-center justify-center` : 'pr-4'}`}>card_membership</span>
-
-            {!collapsed && <span className="text-xl font-bold font-roboto">Gestion des users</span>}
+            {!collapsed && <span className="text-xl font-bold font-roboto">Gestion des utilisateurs</span>}
           </Link>
 
-          <Link 
-            to="/admin/evaluation-performance" 
-            className={`link-style flex items-center ${collapsed ? 'justify-center' : ''}`}
+          <Link
+            to="/admin/evaluation-performance"
+            className={`link-style flex items-center ${collapsed ? 'justify-center' : ''} hover:bg-white/10 transition-colors`}
           >
             <span className={`material-icons ${collapsed ? `w-${sizeBox} h-${sizeBox} flex items-center justify-center` : 'pr-4'}`}>assessment</span>
             {!collapsed && <span className="text-xl font-bold font-roboto">Évaluation du Système</span>}
@@ -68,7 +77,7 @@ const Navbar = ({ collapsed = false, onToggle = () => {} }) => {
                 alert("Erreur lors de la déconnexion");
               }
             }}
-            className={`link-style w-full text-left flex items-center ${collapsed ? 'justify-center' : ''}`}
+            className={`link-style w-full text-left flex items-center ${collapsed ? 'justify-center' : ''} hover:bg-white/10 transition-colors mt-4`}
           >
             <span className={`material-icons ${collapsed ? `w-${sizeBox} h-${sizeBox} flex items-center justify-center` : 'pr-4'}`}>logout</span>
             {!collapsed && <span className="text-xl font-bold font-roboto">Déconnexion</span>}
@@ -83,5 +92,6 @@ Navbar.propTypes = {
   collapsed: PropTypes.bool,
   onToggle: PropTypes.func,
 };
+
 
 export default Navbar;

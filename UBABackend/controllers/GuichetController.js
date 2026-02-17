@@ -3,7 +3,7 @@ const db = require('../config/db');
 
 // Créer un guichet
 exports.createGuichet = (req, res) => {
-    const { lettre, idService, idUtilisateur, type } = req.body;
+    const { lettre, idService, idUtilisateur } = req.body;
 
     // Validations
     if (!lettre || !lettre.trim()) {
@@ -57,8 +57,7 @@ exports.createGuichet = (req, res) => {
             Guichet.create({
                 lettre: lettreMaj,
                 idService: parseInt(idService),
-                idUtilisateur: idUtilisateur ? parseInt(idUtilisateur) : null,
-                type: type || 'standard'
+                idUtilisateur: idUtilisateur ? parseInt(idUtilisateur) : null
             }, (err, guichet) => {
                 if (err) {
                     console.error("❌ Erreur création guichet:", err);
@@ -177,7 +176,7 @@ exports.getLettresDisponibles = (req, res) => {
 // Mettre à jour un guichet
 exports.updateGuichet = (req, res) => {
     const { id } = req.params;
-    const { lettre, idService, idUtilisateur, type } = req.body;
+    const { lettre, idService, idUtilisateur } = req.body;
 
     if (!id || isNaN(id)) {
         return res.status(400).json({ success: false, message: "ID invalide" });
@@ -208,8 +207,7 @@ exports.updateGuichet = (req, res) => {
         Guichet.update(parseInt(id), {
             lettre: lettreMaj,
             idService: parseInt(idService),
-            idUtilisateur: idUtilisateur ? parseInt(idUtilisateur) : null,
-            type
+            idUtilisateur: idUtilisateur ? parseInt(idUtilisateur) : null
         }, (err, guichet) => {
             if (err) {
                 if (err.message === "Guichet non trouvé") {

@@ -12,8 +12,11 @@ router.get("/admin/dashboard", statistiqueController.getDashboardData);
 // Routes séparées (optionnelles)
 router.get("/stats/globales", statistiqueController.getGlobalStats);
 router.get("/stats/repartition-services", statistiqueController.getServiceStats);
+router.get("/stats/performances-services", statistiqueController.getServicePerformance);
 router.get("/stats/activite-horaire", statistiqueController.getHourlyActivity);
 router.get("/stats/tendances", statistiqueController.getTrends);
+router.get("/stats/activite-hebdo", statistiqueController.getWeeklyActivity);
+router.get("/stats/activite-mensuelle", statistiqueController.getMonthlyActivity);
 
 router.get("/stats/performances-agents", statistiqueController.getPerformancesAgents);
 module.exports = router;

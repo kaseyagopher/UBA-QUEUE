@@ -24,7 +24,6 @@ model service {
 model guichet {
   id        Int    @id @default(autoincrement())
   lettre    String @db.Char(1)
-  type      String @db.VarChar(50) @default("standard")
 
   idService    Int
   service      service       @relation(fields: [idService], references: [id])

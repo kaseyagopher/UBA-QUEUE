@@ -5,8 +5,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7cbe1da3-e32e-4b4e-bd81-6c03360d26b0" name="Changes" comment="adding a resizable option on users managements">
-      <change afterPath="$PROJECT_DIR$/UBAFrontend/src/assets/business-office-remote-lifestyle.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UBABackend/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/UBABackend/node_modules/.package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UBABackend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/UBABackend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UBABackend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/UBABackend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UBAFrontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UBAFrontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UBAFrontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UBAFrontend/src/components/AdminLayout.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/src/components/AdminLayout.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UBAFrontend/src/components/AgentLayout.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/src/components/AgentLayout.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UBAFrontend/src/components/AgentShell.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/src/components/AgentShell.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UBAFrontend/src/components/Navbar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/src/components/Navbar.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UBAFrontend/src/main.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/src/main.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UBAFrontend/src/pages/Login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/src/pages/Login.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UBAFrontend/src/pages/admin/DashboardAdmin.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/src/pages/admin/DashboardAdmin.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UBAFrontend/src/pages/admin/EvaluationPerformance.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/src/pages/admin/EvaluationPerformance.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UBAFrontend/src/pages/admin/GestionGuichet.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/src/pages/admin/GestionGuichet.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UBAFrontend/src/pages/admin/GestionService.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/src/pages/admin/GestionService.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UBAFrontend/src/pages/admin/GestionUtilisateur.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/src/pages/admin/GestionUtilisateur.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UBAFrontend/src/pages/agent/AgentAccueil.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/src/pages/agent/AgentAccueil.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UBAFrontend/src/pages/agent/GestionClient.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/src/pages/agent/GestionClient.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UBAFrontend/src/pages/client/Services.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/src/pages/client/Services.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,6 +44,13 @@
       </list>
     </option>
   </component>
+  <component name="FormatOnSaveOptions">
+    <option name="myRunOnSave" value="false" />
+    <option name="myAllFileTypesSelected" value="true" />
+    <option name="mySelectedFileTypes">
+      <set />
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -37,27 +63,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "main",
-    "javascript.preferred.runtime.type.id": "node",
-    "junie.onboarding.icon.badge.shown": "true",
-    "last_opened_file_path": "C:/Fichiers/UBA/UBAFrontend/src/assets",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "to.speed.mode.migration.done": "true",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;javascript.preferred.runtime.type.id&quot;: &quot;node&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Fichiers/UBA/UBAFrontend/src/assets&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\Gopher\\AppData\\Local\\Programs\\WebStorm\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Fichiers\UBA\UBAFrontend\src\assets" />
@@ -82,6 +109,20 @@
       <workItem from="1770235566472" duration="6727000" />
       <workItem from="1770439132465" duration="2589000" />
       <workItem from="1770549087210" duration="968000" />
+      <workItem from="1770553927085" duration="3653000" />
+      <workItem from="1770626064977" duration="20113000" />
+      <workItem from="1770656977393" duration="1001000" />
+      <workItem from="1770727129809" duration="10392000" />
+      <workItem from="1770755936424" duration="98000" />
+      <workItem from="1770843809814" duration="7520000" />
+      <workItem from="1770853861294" duration="3563000" />
+      <workItem from="1770917996507" duration="1539000" />
+      <workItem from="1770964276720" duration="1743000" />
+      <workItem from="1771067562876" duration="13981000" />
+      <workItem from="1771145556644" duration="5346000" />
+      <workItem from="1771221498462" duration="9435000" />
+      <workItem from="1771271838246" duration="2113000" />
+      <workItem from="1771275672651" duration="27000" />
     </task>
     <task id="LOCAL-00001" summary="adding a resizable option on users managements">
       <option name="closed" value="true" />
@@ -96,6 +137,17 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="addin" />

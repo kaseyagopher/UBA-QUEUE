@@ -56,6 +56,30 @@ exports.getPendingTickets = (req, res) => {
     });
 };
 
+// Récupérer le ticket en cours (appelé) pour un agent
+exports.getTicketEnCoursByAgent = (req, res) => {
+    const { agentId } = req.params;
+
+    if (!agentId || isNaN(agentId)) {
+        return res.status(400).json({
+            success: false,
+            message: "ID agent invalide"
+        });
+    }
+
+    Ticket.getTicketEnCoursByAgent(parseInt(agentId), (err, ticket) => {
+        if (err) {
+            console.error("❌ Erreur récupération ticket en cours:", err);
+            return res.status(500).json({
+                success: false,
+                message: "Erreur serveur"
+            });
+        }
+
+        res.status(200).json(ticket);
+    });
+};
+
 // Récupérer le prochain ticket en attente pour un service
 exports.getNextPendingTicket = (req, res) => {
     const { serviceId } = req.params;

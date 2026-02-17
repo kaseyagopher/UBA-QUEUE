@@ -79,6 +79,16 @@ exports.getServiceStats = (req, res) => {
     });
 };
 
+// Statistiques détaillées par service
+exports.getServicePerformance = (req, res) => {
+    Statistique.getServicePerformance((err, data) => {
+        if (err) {
+            return res.status(500).json({ success: false, message: err.message });
+        }
+        res.status(200).json({ success: true, data });
+    });
+};
+
 // Route séparée pour l'activité horaire
 exports.getHourlyActivity = (req, res) => {
     Statistique.getHourlyActivity((err, data) => {
@@ -92,6 +102,26 @@ exports.getHourlyActivity = (req, res) => {
 // Route séparée pour les tendances
 exports.getTrends = (req, res) => {
     Statistique.getTrends((err, data) => {
+        if (err) {
+            return res.status(500).json({ success: false, message: err.message });
+        }
+        res.status(200).json({ success: true, data });
+    });
+};
+
+// Activité hebdomadaire (par jour de la semaine)
+exports.getWeeklyActivity = (req, res) => {
+    Statistique.getWeeklyActivity((err, data) => {
+        if (err) {
+            return res.status(500).json({ success: false, message: err.message });
+        }
+        res.status(200).json({ success: true, data });
+    });
+};
+
+// Activité mensuelle (par jour du mois)
+exports.getMonthlyActivity = (req, res) => {
+    Statistique.getMonthlyActivity((err, data) => {
         if (err) {
             return res.status(500).json({ success: false, message: err.message });
         }

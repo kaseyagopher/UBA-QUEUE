@@ -49,6 +49,22 @@ const Ticket = {
         });
     },
 
+    // Récupérer le ticket en cours (appelé) pour un agent (après refresh)
+    getTicketEnCoursByAgent: (agentId, callback) => {
+        const sql = `
+            SELECT t.*, c.nom, c.postnom, c.prenom
+            FROM Ticket t
+            INNER JOIN Client c ON t.idClient = c.id
+            WHERE t.statut = 'appele' AND t.idUtilisateur = ?
+            ORDER BY t.heureAppel DESC
+            LIMIT 1
+        `;
+        db.query(sql, [agentId], (err, results) => {
+            if (err) return callback(err, null);
+            callback(null, results[0] || null);
+        });
+    },
+
     // Récupérer le prochain ticket en attente pour un service
     getNextPendingTicket: (serviceId, callback) => {
         const sql = `

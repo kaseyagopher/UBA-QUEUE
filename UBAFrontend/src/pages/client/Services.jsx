@@ -9,8 +9,13 @@ export function Services(){
     },[])
 
     const [showForm, setShowForm] = useState(false)
-    const [serviceName, setServiceName] = useState('')
-    const[formData, setFormData] = useState({ nom: '', postnom: '', prenom:'', service:''});
+    // liste des services récupérés depuis le backend
+    const [services, setServices] = useState([])
+    const [loadingServices, setLoadingServices] = useState(true)
+    // id du service sélectionné
+    const [selectedServiceId, setSelectedServiceId] = useState(null)
+    const [selectedServiceName, setSelectedServiceName] = useState('')
+    const[formData, setFormData] = useState({ nom: '', postnom: '', prenom:''});
 
     // Ajout d'états pour le chargement et le succès
     const [isSubmitting, setIsSubmitting] = useState(false)
@@ -23,8 +28,10 @@ export function Services(){
 
 
 
-    const handleServiceClik = (serviceName) =>{
-        setServiceName(serviceName)
+    const handleServiceClik = (service) =>{
+        // service = { id, nomService, ... }
+        setSelectedServiceId(service.id)
+        setSelectedServiceName(service.nomService || service.nom || '')
         setShowForm(true)
     }
 
@@ -33,9 +40,26 @@ export function Services(){
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    useEffect(() => {
+      // Charger les services depuis l'API
+      const load = async () => {
+        try {
+          setLoadingServices(true)
+          const res = await axios.get('http://localhost:4000/api/services')
+          setServices(res.data || [])
+        } catch (err) {
+          console.error('Erreur chargement services', err)
+          setServices([])
+        } finally {
+          setLoadingServices(false)
+        }
+      }
+      load()
+    }, [])
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+
         console.log("FormData avant envoi :", formData);
         setIsSubmitting(true)
 
@@ -44,7 +68,7 @@ export function Services(){
                 nom: formData.nom,
                 postnom: formData.postnom,
                 prenom: formData.prenom,
-                service: serviceName,
+                idService: selectedServiceId,
             });
 
             // afficher animation de succès
@@ -56,6 +80,8 @@ export function Services(){
                 setShowForm(false)
                 setShowSuccess(false)
                 setFormData({ nom: '', postnom: '', prenom: '' })
+                setSelectedServiceId(null)
+                setSelectedServiceName('')
             }, 1400)
 
         } catch (error) {
@@ -63,7 +89,7 @@ export function Services(){
             console.error("Erreur lors de l'enregistrement :", error);
         }
     };
-    
+
 
     return<div className='h-screen p-5'>
         <div>
@@ -72,8 +98,8 @@ export function Services(){
             </div>
             <p className='italic text-xl'>BIENVENU SUR LE PORTAIL CLIENT, CHOISISSEZ VOTRE SERVICE</p>
         </div>
-        
-        
+
+
         {showForm && (
             <div className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 z-10 ' onClick={toogleForm}
             />
@@ -98,6 +124,9 @@ export function Services(){
                         <div className="text-xl font-bold ">
                             Veuillez renseignez vos informations
                         </div>
+                        {selectedServiceName && (
+                          <div className='mt-2 mb-4 text-sm text-gray-600'>Service sélectionné : <strong>{selectedServiceName}</strong></div>
+                        )}
                     <Input
                         type="text"
                         name="nom"
@@ -125,7 +154,7 @@ export function Services(){
                     onChange={handleChange}
                     />
 
-                    <button type="submit" className="w-full font-comfortaa rounded-lg h-10 mt-5 text-white bg-green-600 disabled:opacity-50" disabled={isSubmitting}>
+                    <button type="submit" className="w-full font-comfortaa rounded-lg h-10 mt-5 text-white bg-green-600 disabled:opacity-50" disabled={isSubmitting || !selectedServiceId}>
                         {isSubmitting ? 'Enregistrement...' : 'Valider'}
                     </button>
                         <button type="button" onClick={toogleForm} className='w-full font-comfortaa rounded-lg h-10 mt-5 text-white bg-customRed'>Annuler</button>
@@ -136,17 +165,14 @@ export function Services(){
 
         <div className=' pt-5 pb-5 grid gap-12 lg:grid-cols-2 lg:grid-rows-2'>
 
-            <button className='services-option' onClick={()=> handleServiceClik('compte_bancaire')} >Comptes bancaires</button>
-
-            <button className='services-option' onClick={()=> handleServiceClik('pret_credit')} >Prets et Credits</button>    
-            
-            <button className='services-option' onClick={()=> handleServiceClik('carte_bancaire')}>Cartes bancaires</button>
-
-            <button className='services-option' onClick={()=> handleServiceClik('transfert_argent')}>Transfert d&apos;argent</button>
-
-            <button className='services-option' onClick={()=> handleServiceClik('service_entreprise')}>Services aux entreprise</button>
-
-            <button className='services-option' onClick={()=> handleServiceClik('solution_paiement')}>Solutions paiement</button>
+            {/* Affiche les services récupérés */}
+            {loadingServices ? (
+              <div>Chargement des services...</div>
+            ) : (
+              services.map(s => (
+                <button key={s.id} className='services-option' onClick={()=> handleServiceClik(s)}>{s.nomService || s.nom || s.name}</button>
+              ))
+            )}
         </div>
     </div>
 }

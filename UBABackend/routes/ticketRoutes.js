@@ -5,6 +5,7 @@ const ticketController = require("../controllers/TicketController");
 // Routes pour les tickets
 router.post("/tickets", ticketController.createTicket);
 router.get("/tickets/en-attente", ticketController.getPendingTickets);
+router.get("/tickets/en-cours/agent/:agentId", ticketController.getTicketEnCoursByAgent);
 router.get("/tickets/suivant/:serviceId", ticketController.getNextPendingTicket);
 router.get("/tickets/service/:serviceId/en-attente", ticketController.getPendingTicketsByService);
 router.get("/tickets/stats/service/:serviceId", ticketController.getStatsByService);

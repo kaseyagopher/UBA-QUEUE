@@ -3,13 +3,13 @@ const db = require('../config/db');
 const Guichet = {
     // Créer un guichet
     create: (data, callback) => {
-        const { lettre, idService, idUtilisateur, type } = data;
+        const { lettre, idService, idUtilisateur } = data;
 
         const sql = `INSERT INTO guichet
-                         (lettre, idService, idUtilisateur, type)
-                     VALUES (?, ?, ?, ?)`;
+                         (lettre, idService, idUtilisateur)
+                     VALUES (?, ?, ?)`;
 
-        db.query(sql, [lettre, idService, idUtilisateur || null, type || 'standard'], (err, result) => {
+        db.query(sql, [lettre, idService, idUtilisateur || null], (err, result) => {
             if (err) return callback(err, null);
 
             // Récupérer le guichet créé
@@ -101,13 +101,13 @@ const Guichet = {
 
     // Mettre à jour un guichet
     update: (id, data, callback) => {
-        const { lettre, idService, idUtilisateur, type } = data;
+        const { lettre, idService, idUtilisateur } = data;
 
         const sql = `UPDATE guichet
-                     SET lettre = ?, idService = ?, idUtilisateur = ?, type = ?, updated_at = NOW()
+                     SET lettre = ?, idService = ?, idUtilisateur = ?, updated_at = NOW()
                      WHERE id = ?`;
 
-        db.query(sql, [lettre, idService, idUtilisateur || null, type, id], (err, result) => {
+        db.query(sql, [lettre, idService, idUtilisateur || null, id], (err, result) => {
             if (err) return callback(err, null);
 
             if (result.affectedRows === 0) {

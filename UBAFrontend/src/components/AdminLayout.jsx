@@ -6,7 +6,7 @@ import axios from 'axios';
 import AdminContext from '../contexts/AdminContext';
 
 export default function AdminLayout({ children }) {
-  // Initialisation depuis localStorage pour éviter le 'reset' lors du changement de page
+  // Initialisation depuis localStorage
   const [navCollapsed, setNavCollapsed] = useState(() => {
     try {
       const raw = localStorage.getItem('navCollapsed');
@@ -23,7 +23,7 @@ export default function AdminLayout({ children }) {
     fetchCurrentUser();
   }, []);
 
-  // Persister la préférence de l'utilisateur pour que l'état reste entre pages
+  // Persister la préférence de l'utilisateur
   useEffect(() => {
     try {
       localStorage.setItem('navCollapsed', JSON.stringify(navCollapsed));
@@ -46,38 +46,56 @@ export default function AdminLayout({ children }) {
   };
 
   return (
-    <AdminContext.Provider value={{ title, setTitle }}>
-      <div className="h-screen flex bg-customRed">
-        <div className={`h-screen ${navCollapsed ? 'w-20' : 'w-96'} bg-customRed flex justify-center transition-all duration-300 ease-in-out`}>
-          <Navbar collapsed={navCollapsed} onToggle={() => setNavCollapsed(p => !p)} />
-        </div>
+      <AdminContext.Provider value={{ title, setTitle }}>
+        {/* Conteneur principal - FLEX avec hauteur pleine et overflow caché */}
+        <div className="flex h-screen overflow-hidden bg-customRed">
 
-        <div className="bg-white w-full p-0 transition-all duration-300">
-          <div className="flex items-center justify-between ml-10 mr-10 mt-10">
-            <div className="justify-start">
-              <p className="text-4xl font-roboto font-bold">{title}</p>
-            </div>
-
-            <div className="flex items-center min-w-[220px] justify-end gap-3">
-              {/* Affichage fixe du nom/placeholder pour éviter les sauts quand on change de page */}
-              {loadingUser ? (
-                <div className="w-48 h-5 bg-gray-200 rounded animate-pulse" />
-              ) : (
-                <span className="pr-2 font-roboto font-bold truncate w-48 text-right">
-                  {currentUser ? `${currentUser.nom || currentUser.name || ''} ${currentUser.postnom || ''} ${currentUser.prenom || ''}`.trim() : 'Utilisateur'}
-                </span>
-              )}
-
-              <img src={currentUser && currentUser.avatar ? currentUser.avatar : profile} alt="Profil" className="h-10 rounded-full object-cover" />
-            </div>
+          {/* NAVBAR - TOUJOURS FIXE, JAMAIS SCROLLABLE */}
+          <div className={`flex-shrink-0 transition-all duration-300 ease-in-out ${
+              navCollapsed ? 'w-20' : 'w-96'
+          }`}>
+            <Navbar collapsed={navCollapsed} onToggle={() => setNavCollapsed(p => !p)} />
           </div>
 
-          <div className="p-10">
-            {children}
+          {/* PARTIE DROITE - SEULEMENT CELLE-CI EST SCROLLABLE */}
+          <div className="flex-1 flex flex-col overflow-hidden bg-white">
+
+            {/* HEADER FIXE (ne scroll pas) */}
+            <div className="flex-shrink-0 px-10 py-6 bg-white border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <h1 className="text-4xl font-bold font-roboto text-gray-800">
+                  {title}
+                </h1>
+
+                <div className="flex items-center gap-4">
+                  {loadingUser ? (
+                      <div className="w-48 h-6 bg-gray-200 rounded animate-pulse" />
+                  ) : (
+                      <span className="font-roboto font-bold text-gray-700 truncate max-w-[200px] text-right">
+                                        {currentUser
+                                            ? `${currentUser.nom || ''} ${currentUser.postnom || ''} ${currentUser.prenom || ''}`.trim()
+                                            : 'Administrateur'
+                                        }
+                                    </span>
+                  )}
+                  <img
+                      src={currentUser?.avatar || profile}
+                      alt="Profil"
+                      className="h-10 w-10 rounded-full object-cover border-2 border-customRed"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* CONTENU SCROLLABLE - UNIQUEMENT CECI SCROLLE */}
+            <main className="flex-1 overflow-y-auto bg-gray-50">
+              <div className="p-6 lg:p-8">
+                {children}
+              </div>
+            </main>
           </div>
         </div>
-      </div>
-    </AdminContext.Provider>
+      </AdminContext.Provider>
   );
 }
 
