@@ -5,14 +5,14 @@ import { Login } from './pages/Login.jsx'
 import { Services } from './pages/client/Services.jsx'
 import { GestionClient } from './pages/agent/GestionClient.jsx'
 import {GestionUtilisateur} from "./pages/admin/GestionUtilisateur.jsx";
-import {GestionGuichets} from "./pages/admin/GestionGuichet.jsx";
+import {GestionGuichet} from "./pages/admin/GestionGuichet.jsx";
 import {EvaluationPerformance} from "./pages/admin/EvaluationPerformance.jsx";
-import {EvaluationService} from "./pages/admin/EvaluationService.jsx";
 import {GestionService} from "./pages/admin/GestionService.jsx";
 import { NotFound } from './pages/NotFound.jsx'
 import { AgentAccueil } from './pages/agent/AgentAccueil.jsx'
 import AdminShell from './components/AdminShell';
 import AgentShell from './components/AgentShell.jsx';
+import {Dashboard} from "./pages/admin/DashboardAdmin.jsx";
 
 const router = createBrowserRouter([
   {
@@ -41,10 +41,10 @@ const router = createBrowserRouter([
     path: '/admin',
     element: <AdminShell />,
     children: [
+      {path :'dashboard', element: <Dashboard/> },
       { path: 'gestion-utilisateurs', element: <GestionUtilisateur /> },
-      { path: 'gestion-guichet', element: <GestionGuichets /> },
+      { path: 'gestion-guichet', element: <GestionGuichet /> },
       { path: 'evaluation-performance', element: <EvaluationPerformance /> },
-      { path: 'evaluation-service', element: <EvaluationService /> },
       { path: 'gestion-service', element: <GestionService /> },
     ]
   },
