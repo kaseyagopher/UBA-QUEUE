@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Navbar from './Navbar';
 import profile from '../assets/profile.png';
@@ -6,6 +7,8 @@ import axios from 'axios';
 import AdminContext from '../contexts/AdminContext';
 
 export default function AdminLayout({ children }) {
+  const navigate = useNavigate();
+
   // Initialisation depuis localStorage
   const [navCollapsed, setNavCollapsed] = useState(() => {
     try {
@@ -36,7 +39,13 @@ export default function AdminLayout({ children }) {
     setLoadingUser(true);
     try {
       const res = await axios.get('http://localhost:4000/api/profile', { withCredentials: true });
-      setCurrentUser(res.data || null);
+      const user = res.data || null;
+      if (user && user.role !== 'admin') {
+        setCurrentUser(null);
+        navigate('/login', { replace: true });
+      } else {
+        setCurrentUser(user);
+      }
     } catch (err) {
       console.error('Erreur fetch profile', err);
       setCurrentUser(null);
@@ -44,6 +53,21 @@ export default function AdminLayout({ children }) {
       setLoadingUser(false);
     }
   };
+
+  // Redirection vers login si non connecté
+  useEffect(() => {
+    if (!loadingUser && !currentUser) {
+      navigate('/login', { replace: true });
+    }
+  }, [loadingUser, currentUser, navigate]);
+
+  if (!loadingUser && !currentUser) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-customRed"></div>
+      </div>
+    );
+  }
 
   return (
       <AdminContext.Provider value={{ title, setTitle }}>

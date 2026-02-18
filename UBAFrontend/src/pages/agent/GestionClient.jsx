@@ -16,7 +16,6 @@ export function GestionClient() {
     const [etatClient, setEtatClient] = useState('servi');
     const [loading, setLoading] = useState(true);
     const [modePrononciation, setModePrononciation] = useState('adapte');
-    const [voixDisponibles, setVoixDisponibles] = useState([]);
     const [voixSelectionnee, setVoixSelectionnee] = useState(null);
     const [stats, setStats] = useState({
         aujourdhui: { total: 0, servis: 0, enAttente: 0, absents: 0, annules: 0 }
@@ -86,24 +85,19 @@ export function GestionClient() {
         }
     }, []);
 
-    // Charger les voix (Chrome charge "Google français" de façon asynchrone via voiceschanged)
+    // Voix fixe : Microsoft Julie French (pas de sélecteur)
     useEffect(() => {
-        const meilleureVoixFR = (voix) => {
-            const google = voix.find(v => /google/i.test(v.name) && v.lang.startsWith('fr'));
-            const microsoft = voix.find(v => /microsoft/i.test(v.name) && v.lang.startsWith('fr'));
-            return google || microsoft || voix[0];
+        const trouverMicrosoftJulie = (voix) => {
+            const julie = voix.find(v => /julie/i.test(v.name) && /microsoft/i.test(v.name) && v.lang.startsWith('fr'));
+            const microsoftFR = voix.find(v => /microsoft/i.test(v.name) && v.lang.startsWith('fr'));
+            const voixFR = voix.find(v => v.lang.startsWith('fr'));
+            return julie || microsoftFR || voixFR || voix[0];
         };
 
         const chargerVoix = () => {
             const voices = window.speechSynthesis.getVoices();
-            const voixFR = voices.filter(v => v.lang.startsWith('fr'));
-            const liste = voixFR.length ? voixFR : voices;
-            setVoixDisponibles(liste);
-
-            if (liste.length > 0) {
-                const sauvegarde = localStorage.getItem('tts-voix-agent');
-                const trouve = sauvegarde && liste.find(v => v.name === sauvegarde);
-                setVoixSelectionnee(trouve || meilleureVoixFR(voixFR.length ? voixFR : voices));
+            if (voices.length > 0) {
+                setVoixSelectionnee(trouverMicrosoftJulie(voices));
             }
         };
 
@@ -111,12 +105,6 @@ export function GestionClient() {
         window.speechSynthesis.onvoiceschanged = chargerVoix;
         return () => { window.speechSynthesis.onvoiceschanged = null; };
     }, []);
-
-    useEffect(() => {
-        if (voixSelectionnee) {
-            localStorage.setItem('tts-voix-agent', voixSelectionnee.name);
-        }
-    }, [voixSelectionnee]);
 
     // Chargement initial
     useEffect(() => {
@@ -402,81 +390,16 @@ export function GestionClient() {
                     guichetLetter={guichet?.lettre || 'N/A'}
                 />
 
-                {/* Contrôles de prononciation, voix et guichet */}
-                <div className="bg-white rounded-2xl shadow-md p-4 mb-6 flex flex-col gap-4">
-                    <div className="flex flex-wrap items-center justify-between gap-4">
-                        <div className="flex items-center gap-2 bg-gray-100 rounded-lg p-1">
-                            <button
-                                onClick={() => setModePrononciation('standard')}
-                                className={`px-3 py-1 rounded-md text-sm transition-colors ${
-                                    modePrononciation === 'standard'
-                                        ? 'bg-white text-customRed shadow-sm'
-                                        : 'text-gray-600 hover:text-gray-900'
-                                }`}
-                                title="Prononciation standard"
-                            >
-                                Standard
-                            </button>
-                            <button
-                                onClick={() => setModePrononciation('lent')}
-                                className={`px-3 py-1 rounded-md text-sm transition-colors ${
-                                    modePrononciation === 'lent'
-                                        ? 'bg-white text-customRed shadow-sm'
-                                        : 'text-gray-600 hover:text-gray-900'
-                                }`}
-                                title="Prononciation lente"
-                            >
-                                Lent
-                            </button>
-                            <button
-                                onClick={() => setModePrononciation('adapte')}
-                                className={`px-3 py-1 rounded-md text-sm transition-colors ${
-                                    modePrononciation === 'adapte'
-                                        ? 'bg-white text-customRed shadow-sm'
-                                        : 'text-gray-600 hover:text-gray-900'
-                                }`}
-                                title="Prononciation adaptée aux noms africains"
-                            >
-                                Adapté
-                            </button>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                            <span className="text-sm text-gray-600 flex items-center gap-1">
-                                <span className="material-icons text-base">record_voice_over</span>
-                                Voix
-                            </span>
-                            <select
-                                value={voixSelectionnee?.name || (voixDisponibles[0]?.name ?? '')}
-                                onChange={(e) => {
-                                    const v = voixDisponibles.find(x => x.name === e.target.value);
-                                    if (v) setVoixSelectionnee(v);
-                                }}
-                                className="px-3 py-2 border border-gray-300 rounded-lg text-sm min-w-[200px] focus:ring-2 focus:ring-customRed focus:border-transparent"
-                            >
-                                {voixDisponibles.length === 0 && (
-                                    <option value="">Chargement...</option>
-                                )}
-                                {voixDisponibles.map((v) => (
-                                    <option key={v.name + v.lang} value={v.name}>
-                                        {v.name} {v.lang ? `(${v.lang})` : ''}
-                                    </option>
-                                ))}
-                            </select>
-                            {voixSelectionnee?.name?.toLowerCase().includes('google') && (
-                                <span className="text-xs text-green-600 bg-green-50 px-2 py-0.5 rounded">Style Google</span>
-                            )}
-                        </div>
-
-                        <div className="bg-gradient-to-r from-customRed to-red-600 text-white px-4 py-2 rounded-lg flex items-center justify-center gap-3">
-                            <span className="text-sm">Guichet</span>
-                            <span className="text-2xl font-bold">{guichet?.lettre || 'N/A'}</span>
-                        </div>
+                {/* Guichet uniquement (style adapté + Microsoft Julie fixes) */}
+                <div className="bg-white rounded-2xl shadow-md p-4 mb-6 flex flex-wrap items-center justify-between gap-4">
+                    <div className="bg-gradient-to-r from-customRed to-red-600 text-white px-4 py-2 rounded-lg flex items-center justify-center gap-3">
+                        <span className="text-sm">Guichet</span>
+                        <span className="text-2xl font-bold">{guichet?.lettre || 'N/A'}</span>
                     </div>
                 </div>
 
                 {/* Stats rapides */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                     <div className="bg-white rounded-xl shadow-sm p-4">
                         <p className="text-sm text-gray-500">Clients servis aujourd'hui</p>
                         <p className="text-2xl font-bold text-gray-800">{stats.aujourdhui?.servis || 0}</p>
@@ -489,13 +412,6 @@ export function GestionClient() {
                         <p className="text-sm text-gray-500">Prochain ticket</p>
                         <p className="text-2xl font-bold text-customRed">
                             {prochainTicket ? `#${prochainTicket.numero}` : 'Aucun'}
-                        </p>
-                    </div>
-                    <div className="bg-white rounded-xl shadow-sm p-4">
-                        <p className="text-sm text-gray-500">Mode prononciation</p>
-                        <p className="text-lg font-semibold text-purple-600">
-                            {modePrononciation === 'adapte' ? '🎤 Adapté' :
-                                modePrononciation === 'lent' ? '🐢 Lent' : '📢 Standard'}
                         </p>
                     </div>
                 </div>
