@@ -281,6 +281,23 @@ exports.annulerTicket = (req, res) => {
     });
 };
 
+// Derniers appels pour affichage salle d'attente (hall) - public
+exports.getDerniersAppels = (req, res) => {
+    const limit = parseInt(req.query.limit) || 10;
+
+    Ticket.getDerniersAppels(limit, (err, appels) => {
+        if (err) {
+            console.error("❌ Erreur récupération derniers appels:", err);
+            return res.status(500).json({
+                success: false,
+                message: "Erreur récupération des appels"
+            });
+        }
+
+        res.status(200).json(appels);
+    });
+};
+
 // Obtenir les statistiques d'un service
 exports.getStatsByService = (req, res) => {
     const { serviceId } = req.params;

@@ -230,6 +230,24 @@ const Ticket = {
         });
     },
 
+    // Derniers tickets appelés pour affichage salle d'attente (hall)
+    getDerniersAppels: (limit, callback) => {
+        const nb = limit || 10;
+        const sql = `
+            SELECT t.numero, t.heureAppel, g.lettre as guichetLettre, s.nomService
+            FROM ticket t
+            LEFT JOIN guichet g ON t.idGuichet = g.id
+            LEFT JOIN service s ON t.idService = s.id
+            WHERE t.statut = 'appele' AND DATE(t.created_at) = CURDATE() AND t.heureAppel IS NOT NULL
+            ORDER BY t.heureAppel DESC
+            LIMIT ?
+        `;
+        db.query(sql, [nb], (err, results) => {
+            if (err) return callback(err, null);
+            callback(null, results || []);
+        });
+    },
+
     // Obtenir l'activité horaire pour un service
     getActiviteHoraire: (serviceId, callback) => {
         const sql = `

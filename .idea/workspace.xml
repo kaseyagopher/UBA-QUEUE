@@ -6,26 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="7cbe1da3-e32e-4b4e-bd81-6c03360d26b0" name="Changes" comment="adding a resizable option on users managements">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UBABackend/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/UBABackend/node_modules/.package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UBABackend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/UBABackend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UBABackend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/UBABackend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UBAFrontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UBAFrontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UBAFrontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UBAFrontend/src/components/AdminLayout.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/src/components/AdminLayout.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UBAFrontend/src/components/AgentLayout.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/src/components/AgentLayout.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UBAFrontend/src/components/AgentShell.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/src/components/AgentShell.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UBAFrontend/src/components/Navbar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/src/components/Navbar.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UBAFrontend/src/main.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/src/main.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UBAFrontend/src/pages/Login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/src/pages/Login.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UBAFrontend/src/pages/admin/DashboardAdmin.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/src/pages/admin/DashboardAdmin.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UBAFrontend/src/pages/admin/EvaluationPerformance.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/src/pages/admin/EvaluationPerformance.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UBAFrontend/src/pages/admin/GestionGuichet.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/src/pages/admin/GestionGuichet.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UBAFrontend/src/pages/admin/GestionService.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/src/pages/admin/GestionService.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UBAFrontend/src/pages/admin/GestionUtilisateur.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/src/pages/admin/GestionUtilisateur.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UBAFrontend/src/pages/agent/AgentAccueil.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/src/pages/agent/AgentAccueil.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UBAFrontend/src/pages/agent/GestionClient.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/src/pages/agent/GestionClient.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UBAFrontend/src/pages/client/Services.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/UBAFrontend/src/pages/client/Services.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,6 +33,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/UBABackend/node_modules/express/lib/router/index.js" root0="SKIP_INSPECTION" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -123,6 +106,7 @@
       <workItem from="1771221498462" duration="9435000" />
       <workItem from="1771271838246" duration="2113000" />
       <workItem from="1771275672651" duration="27000" />
+      <workItem from="1771394484660" duration="3411000" />
     </task>
     <task id="LOCAL-00001" summary="adding a resizable option on users managements">
       <option name="closed" value="true" />

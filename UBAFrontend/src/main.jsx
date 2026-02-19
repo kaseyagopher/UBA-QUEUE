@@ -3,6 +3,7 @@ import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { Login } from './pages/Login.jsx'
 import { Services } from './pages/client/Services.jsx'
+import { AffichageSalle } from './pages/client/AffichageSalle.jsx'
 import { GestionClient } from './pages/agent/GestionClient.jsx'
 import {GestionUtilisateur} from "./pages/admin/GestionUtilisateur.jsx";
 import {GestionGuichet} from "./pages/admin/GestionGuichet.jsx";
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
   {
     path :'/client-portail',
     element: <Services/>
+  },
+  {
+    path: '/affichage-salle',
+    element: <AffichageSalle/>
   },
   // Routes agent regroupées sous un shell parent (layout partagé)
   {

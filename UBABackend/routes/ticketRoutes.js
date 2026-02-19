@@ -9,6 +9,7 @@ router.get("/tickets/en-cours/agent/:agentId", ticketController.getTicketEnCours
 router.get("/tickets/suivant/:serviceId", ticketController.getNextPendingTicket);
 router.get("/tickets/service/:serviceId/en-attente", ticketController.getPendingTicketsByService);
 router.get("/tickets/stats/service/:serviceId", ticketController.getStatsByService);
+router.get("/tickets/affichage-salle", ticketController.getDerniersAppels);
 
 // Actions sur un ticket spécifique
 router.patch("/tickets/:id/appeler", ticketController.appelerTicket);
