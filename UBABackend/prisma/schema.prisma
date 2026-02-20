@@ -21,6 +21,7 @@ model service {
   updated_at DateTime @updatedAt
 }
 
+
 model guichet {
   id        Int    @id @default(autoincrement())
   lettre    String @db.Char(1)
